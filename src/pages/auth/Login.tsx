@@ -65,7 +65,7 @@ const Login: React.FC = () => {
         <h3 className="mt-6 text-center text-2xl font-bold text-gray-900">Sign in to your account</h3>
         <p className="mt-2 text-center text-sm text-gray-600">
           Or{" "}
-          <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500 transition-colors">
+          <Link to="/auth/register" className="font-medium text-blue-600 hover:text-blue-500 transition-colors">
             create a new account
           </Link>
         </p>
@@ -175,7 +175,7 @@ const Login: React.FC = () => {
 
             <div className="mt-6">
               <Link
-                to="/register"
+                to="/auth/register"
                 className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors duration-200">
                 Create an account
               </Link>

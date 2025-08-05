@@ -58,10 +58,10 @@ const Navbar: React.FC = () => {
               </>
             ) : (
               <>
-                <Link to="/login" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 px-3 py-2 rounded-md hover:bg-blue-50">
+                <Link to="/auth/login" className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 px-3 py-2 rounded-md hover:bg-blue-50">
                   Login
                 </Link>
-                <Link to="/register" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md">
+                <Link to="/auth/register" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md">
                   Register
                 </Link>
               </>
@@ -117,13 +117,13 @@ const Navbar: React.FC = () => {
           ) : (
             <div className="border-t border-gray-200 mt-2 pt-4 space-y-1">
               <Link
-                to="/login"
+                to="/auth/login"
                 onClick={() => setIsMenuOpen(false)}
                 className="block px-3 py-2 text-gray-700 hover:text-blue-600 font-medium rounded-md hover:bg-blue-50 transition-colors duration-200">
                 Login
               </Link>
               <Link
-                to="/register"
+                to="/auth/register"
                 onClick={() => setIsMenuOpen(false)}
                 className="block px-3 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors duration-200 text-center">
                 Register
