@@ -1,5 +1,5 @@
 import api from "../config";
-import type { LoginRequest, RegisterRequest, AuthResponse, User, ApiResponse } from "../../types";
+import type { LoginRequest, RegisterRequest, AuthResponse, User, Role, ApiResponse } from "../../types";
 
 export const authService = {
   // Login user
@@ -46,6 +46,12 @@ export const authService = {
   logout: (): void => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+  },
+
+  // Get available roles
+  getRoles: async (): Promise<Role[]> => {
+    const response = await api.get<ApiResponse<Role[]>>("/auth/roles");
+    return response.data.data;
   },
 
   // Get current user from localStorage

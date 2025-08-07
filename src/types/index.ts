@@ -41,12 +41,18 @@ export interface RegisterRequest {
   name: string;
   email: string;
   password: string;
-  role?: string;
+  role: string;
 }
 
 export interface AuthResponse {
   token: string;
   user: User;
+}
+
+export interface Role {
+  value: string;
+  label: string;
+  description: string;
 }
 
 export interface ApiResponse<T> {

@@ -27,13 +27,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(response.user);
   };
 
-  const loginWithToken = (token: string, user: User) => {
+  const loginWithToken = (_token: string, user: User) => {
     // This is for direct login after registration or when we already have token/user
     setUser(user);
   };
 
-  const register = async (name: string, email: string, password: string) => {
-    const response = await authService.register({ name, email, password });
+  const register = async (name: string, email: string, password: string, role: string) => {
+    const response = await authService.register({ name, email, password, role });
     setUser(response.user);
   };
 

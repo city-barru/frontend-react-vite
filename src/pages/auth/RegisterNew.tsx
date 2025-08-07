@@ -322,9 +322,9 @@ const Register: React.FC = () => {
                           value: 6,
                           message: "Password must be at least 6 characters",
                         },
-                        validate: {
-                          hasLetter: (value) => /[A-Za-z]/.test(value) || "Password must contain at least one letter",
-                          hasNumber: (value) => /\d/.test(value) || "Password must contain at least one number",
+                        pattern: {
+                          value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/,
+                          message: "Password must contain at least one letter and one number",
                         },
                         onChange: handleInputFocus,
                       })}
