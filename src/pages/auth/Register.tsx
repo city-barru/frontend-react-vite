@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../contexts/useAuth";
 import { authService } from "../../api/services/authService";
 import type { RegisterRequest, Role } from "../../types";
@@ -75,7 +76,8 @@ const Register: React.FC = () => {
       console.error("Registration error:", error);
       if (error && typeof error === "object" && "response" in error) {
         const axiosError = error as { response?: { data?: { message?: string; error?: string } } };
-        const errorMessage = axiosError.response?.data?.message || axiosError.response?.data?.error || "Registration failed. Please try again.";
+        const errorMessage =
+          axiosError.response?.data?.message || axiosError.response?.data?.error || "Registration failed. Please try again.";
         setApiError(errorMessage);
       } else {
         setApiError("Registration failed. Please try again.");
@@ -121,6 +123,8 @@ const Register: React.FC = () => {
         return watchedFields.password && watchedFields.confirmPassword && !errors.password && !errors.confirmPassword;
       case 3:
         return watchedFields.role && !errors.role;
+      case 4:
+        return false;
       default:
         return false;
     }
@@ -155,7 +159,9 @@ const Register: React.FC = () => {
             <span>{Math.round(getStepProgress())}% complete</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <div className="bg-blue-600 h-2 rounded-full transition-all duration-300 ease-out" style={{ width: `${getStepProgress()}%` }}></div>
+            <div
+              className="bg-blue-600 h-2 rounded-full transition-all duration-300 ease-out"
+              style={{ width: `${getStepProgress()}%` }}></div>
           </div>
 
           {/* Step Indicators */}
@@ -163,7 +169,11 @@ const Register: React.FC = () => {
             <div className="flex flex-col items-center">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                  currentStep >= 1 ? (isStepComplete(1) ? "bg-green-500 text-white" : "bg-blue-600 text-white") : "bg-gray-300 text-gray-600"
+                  currentStep >= 1
+                    ? isStepComplete(1)
+                      ? "bg-green-500 text-white"
+                      : "bg-blue-600 text-white"
+                    : "bg-gray-300 text-gray-600"
                 }`}>
                 {isStepComplete(1) ? "✓" : "1"}
               </div>
@@ -172,7 +182,11 @@ const Register: React.FC = () => {
             <div className="flex flex-col items-center">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                  currentStep >= 2 ? (isStepComplete(2) ? "bg-green-500 text-white" : "bg-blue-600 text-white") : "bg-gray-300 text-gray-600"
+                  currentStep >= 2
+                    ? isStepComplete(2)
+                      ? "bg-green-500 text-white"
+                      : "bg-blue-600 text-white"
+                    : "bg-gray-300 text-gray-600"
                 }`}>
                 {isStepComplete(2) ? "✓" : "2"}
               </div>
@@ -181,12 +195,38 @@ const Register: React.FC = () => {
             <div className="flex flex-col items-center">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                  currentStep >= 3 ? (isStepComplete(3) ? "bg-green-500 text-white" : "bg-blue-600 text-white") : "bg-gray-300 text-gray-600"
+                  currentStep >= 3
+                    ? isStepComplete(3)
+                      ? "bg-green-500 text-white"
+                      : "bg-blue-600 text-white"
+                    : "bg-gray-300 text-gray-600"
                 }`}>
                 {isStepComplete(3) ? "✓" : "3"}
               </div>
               <span className="text-xs mt-1">Role</span>
             </div>
+            <AnimatePresence>
+              {isStepComplete(3) && watchedFields.role === "visitor" && (
+                <motion.div
+                  className="flex flex-col items-center"
+                  initial={{ opacity: 0, scale: 0.5, y: -10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.5, y: -10 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}>
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                      currentStep >= 4
+                        ? isStepComplete(4)
+                          ? "bg-green-500 text-white"
+                          : "bg-blue-600 text-white"
+                        : "bg-gray-300 text-gray-600"
+                    }`}>
+                    {isStepComplete(4) ? "✓" : "4"}
+                  </div>
+                  <span className="text-xs mt-1">Preferences</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
@@ -285,7 +325,9 @@ const Register: React.FC = () => {
                   onClick={handleNextStep}
                   disabled={!watchedFields.name || !watchedFields.email || !!errors.name || !!errors.email}
                   className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ${
-                    !watchedFields.name || !watchedFields.email || !!errors.name || !!errors.email ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                    !watchedFields.name || !watchedFields.email || !!errors.name || !!errors.email
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-blue-600 hover:bg-blue-700"
                   }`}>
                   Continue to Security
                   <svg className="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -381,7 +423,11 @@ const Register: React.FC = () => {
                     {watchedFields.confirmPassword && watchedFields.confirmPassword === password && (
                       <p className="mt-1 text-sm text-green-600 flex items-center">
                         <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                         Passwords match
                       </p>
@@ -406,9 +452,13 @@ const Register: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleNextStep}
-                    disabled={!watchedFields.password || !watchedFields.confirmPassword || !!errors.password || !!errors.confirmPassword}
+                    disabled={
+                      !watchedFields.password || !watchedFields.confirmPassword || !!errors.password || !!errors.confirmPassword
+                    }
                     className={`flex-1 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ${
-                      !watchedFields.password || !watchedFields.confirmPassword || !!errors.password || !!errors.confirmPassword ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                      !watchedFields.password || !watchedFields.confirmPassword || !!errors.password || !!errors.confirmPassword
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-blue-600 hover:bg-blue-700"
                     }`}>
                     Choose Role
                     <svg className="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -445,7 +495,9 @@ const Register: React.FC = () => {
                         key={role.value}
                         onClick={() => handleRoleSelect(role.value)}
                         className={`relative rounded-lg border-2 p-4 cursor-pointer transition-all duration-200 hover:border-blue-400 ${
-                          watchedFields.role === role.value ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white hover:bg-gray-50"
+                          watchedFields.role === role.value
+                            ? "border-blue-500 bg-blue-50"
+                            : "border-gray-200 bg-white hover:bg-gray-50"
                         }`}>
                         <div className="flex items-start">
                           <div className="flex items-center h-5">
@@ -461,10 +513,19 @@ const Register: React.FC = () => {
                             <div className="flex items-center">
                               {role.value === "visitor" ? (
                                 <svg className="w-6 h-6 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                  />
                                 </svg>
                               ) : (
-                                <svg className="w-6 h-6 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg
+                                  className="w-6 h-6 text-green-500 mr-2"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24">
                                   <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
@@ -480,7 +541,11 @@ const Register: React.FC = () => {
                           {watchedFields.role === role.value && (
                             <div className="absolute top-2 right-2">
                               <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                <path
+                                  fillRule="evenodd"
+                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                  clipRule="evenodd"
+                                />
                               </svg>
                             </div>
                           )}
@@ -513,9 +578,16 @@ const Register: React.FC = () => {
                     }`}>
                     {isLoading ? (
                       <div className="flex items-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <svg
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
                         Creating account...
                       </div>
@@ -523,7 +595,146 @@ const Register: React.FC = () => {
                       <>
                         Create Account
                         <svg className="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 4: Preference Selection (For Visitor Only) */}
+            {currentStep === 4 && (
+              <div className="space-y-6">
+                <div className="text-center">
+                  <h4 className="text-lg font-medium text-gray-900">What brings you here?</h4>
+                  <p className="mt-1 text-sm text-gray-600">Choose your role to personalize your experience</p>
+                </div>
+
+                <div>
+                  <input
+                    type="hidden"
+                    {...register("role", {
+                      required: "Please select a role",
+                    })}
+                  />
+
+                  <div className="grid gap-4">
+                    {roles.map((role) => (
+                      <div
+                        key={role.value}
+                        onClick={() => handleRoleSelect(role.value)}
+                        className={`relative rounded-lg border-2 p-4 cursor-pointer transition-all duration-200 hover:border-blue-400 ${
+                          watchedFields.role === role.value
+                            ? "border-blue-500 bg-blue-50"
+                            : "border-gray-200 bg-white hover:bg-gray-50"
+                        }`}>
+                        <div className="flex items-start">
+                          <div className="flex items-center h-5">
+                            <input
+                              type="radio"
+                              value={role.value}
+                              checked={watchedFields.role === role.value}
+                              onChange={() => handleRoleSelect(role.value)}
+                              className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"
+                            />
+                          </div>
+                          <div className="ml-3 flex-1">
+                            <div className="flex items-center">
+                              {role.value === "visitor" ? (
+                                <svg className="w-6 h-6 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                  />
+                                </svg>
+                              ) : (
+                                <svg
+                                  className="w-6 h-6 text-green-500 mr-2"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24">
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                  />
+                                </svg>
+                              )}
+                              <label className="text-base font-medium text-gray-900">{role.label}</label>
+                            </div>
+                            <p className="text-sm text-gray-500 mt-1">{role.description}</p>
+                          </div>
+                          {watchedFields.role === role.value && (
+                            <div className="absolute top-2 right-2">
+                              <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                  fillRule="evenodd"
+                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {errors.role && <p className="mt-2 text-sm text-red-600">{errors.role.message}</p>}
+                </div>
+
+                <div className="flex space-x-3">
+                  <button
+                    type="button"
+                    onClick={handlePrevStep}
+                    className="flex-1 flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
+                    <svg className="mr-2 -ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    Back
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isLoading || !watchedFields.role}
+                    className={`flex-1 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ${
+                      isLoading || !watchedFields.role ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+                    }`}>
+                    {isLoading ? (
+                      <div className="flex items-center">
+                        <svg
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Creating account...
+                      </div>
+                    ) : (
+                      <>
+                        Create Account
+                        <svg className="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                       </>
                     )}
