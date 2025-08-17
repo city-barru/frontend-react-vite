@@ -58,6 +58,7 @@ export interface Role {
 export interface ApiResponse<T> {
   data: T;
   message?: string;
+  error?: string | null;
 }
 
 export interface CreateTripRequest {
