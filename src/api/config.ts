@@ -34,7 +34,6 @@ api.interceptors.response.use(
       // Unauthorized - clear token and redirect to login
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      window.location.href = "/auth/login";
     }
     return Promise.reject(error);
   }
