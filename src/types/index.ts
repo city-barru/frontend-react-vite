@@ -1,3 +1,5 @@
+import type { Preference } from "./preference.types";
+
 export interface User {
   id: number;
   name: string;
@@ -71,6 +73,7 @@ export interface CreateTripRequest {
   start_longitude: number;
   end_latitude: number;
   end_longitude: number;
+  preferences: Preference[];
 }
 
 export interface UpdateTripRequest {
