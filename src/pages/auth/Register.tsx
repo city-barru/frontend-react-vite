@@ -72,8 +72,8 @@ const Register: React.FC = () => {
       const fetchPreferences = async () => {
         setLoadingPreferences(true);
         try {
-          const response = await api.get("/preferences/");
-          if (response.status === 200 && response.data.length == 0) {
+          const response = await api.get("/preferences");
+          if (response.status === 200 && response.data.length != 0) {
             const data = response.data;
             setPreferences(data.data || []);
           } else {
